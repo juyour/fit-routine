@@ -1,8 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { ChevronDown, GripVertical, Plus, Trash2, X } from 'lucide-react'
-import type { Exercise, MuscleGroup } from '@/lib/workout-data'
+import {
+  matchMuscleByKeyword,
+  type Exercise,
+  type MuscleGroup,
+} from '@/lib/workout-data'
 import { MuscleTagPicker } from '@/components/muscle-tag-picker'
 import { cn } from '@/lib/utils'
 
@@ -13,7 +17,7 @@ type ExerciseRowProps = {
   isDragging: boolean
   isDragOver: boolean
   onToggle: () => void
-  onRename: (name: string) => void
+  onRename: (name: string, autoMuscle?: MuscleGroup | null) => void
   onMuscleChange: (muscle: MuscleGroup | null) => void
   onRemove: () => void
   onSetChange: (setId: string, field: 'weight' | 'reps', value: string) => void
@@ -44,12 +48,68 @@ export function ExerciseRow({
   const [pickerOpen, setPickerOpen] = useState(false)
   const [touched, setTouched] = useState(false)
   const [draggable, setDraggable] = useState(false)
+  const [isBlinking, setIsBlinking] = useState(false)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const blinkTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  const invalid = touched && exercise.name.trim().length === 0
+  const isNameEmpty = exercise.name.trim().length === 0
+  const invalid = (touched || isBlinking) && isNameEmpty
+
   const totalVolume = exercise.sets.reduce(
     (sum, set) => sum + (Number(set.weight) || 0) * (Number(set.reps) || 0),
     0,
   )
+
+  function handleNameChange(value: string) {
+    if (!exercise.isManualTagged) {
+      const autoMatched = matchMuscleByKeyword(value)
+      onRename(value, autoMatched)
+    } else {
+      onRename(value)
+    }
+  }
+
+  // 예외 2: 운동명 누락 시 세트/무게 입력 시도 차단 & 1.5초 레드 깜빡임 및 포커스 이동
+  function handleSetFocus(event: React.FocusEvent<HTMLInputElement>) {
+    if (isNameEmpty) {
+      event.preventDefault()
+      event.target.blur()
+
+      setIsBlinking(true)
+      if (blinkTimerRef.current) clearTimeout(blinkTimerRef.current)
+      blinkTimerRef.current = setTimeout(() => {
+        setIsBlinking(false)
+      }, 1500)
+
+      nameInputRef.current?.focus()
+    }
+  }
+
+  // 예외 4: 무게 및 횟수 비정상 입력 키다운 차단 (음수 -, 스페이스바 차단)
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (
+      event.key === '-' ||
+      event.key === 'Subtract' ||
+      event.key === ' ' ||
+      event.code === 'Space'
+    ) {
+      event.preventDefault()
+    }
+  }
+
+  // 예외 4: 무게 입력 마스킹 (숫자 + 소수점 1개까지)
+  function handleWeightChange(setId: string, value: string) {
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      onSetChange(setId, 'weight', value)
+    }
+  }
+
+  // 예외 4: 횟수 입력 마스킹 (양의 정수)
+  function handleRepsChange(setId: string, value: string) {
+    if (value === '' || /^\d*$/.test(value)) {
+      onSetChange(setId, 'reps', value)
+    }
+  }
 
   return (
     <li
@@ -85,17 +145,19 @@ export function ExerciseRow({
         </span>
 
         <input
+          ref={nameInputRef}
           value={exercise.name}
-          onChange={(event) => onRename(event.target.value)}
+          onChange={(event) => handleNameChange(event.target.value)}
           onBlur={() => setTouched(true)}
-          placeholder="운동 이름을 입력하세요"
+          placeholder="운동 이름을 입력하세요 (예: 벤치프레스, 스쿼트)"
           aria-invalid={invalid}
           aria-label="운동 이름"
           className={cn(
-            'min-w-0 flex-1 rounded-md border border-transparent bg-transparent px-2 py-2 text-[15px] font-medium outline-none transition-colors',
+            'min-w-0 flex-1 rounded-md border border-transparent bg-transparent px-2 py-2 text-[15px] font-medium outline-none transition-all',
             'placeholder:font-normal placeholder:text-muted-foreground/60',
             'hover:border-border focus:border-ring focus:bg-background',
             invalid && 'border-destructive/60 bg-destructive/5 focus:border-destructive',
+            isBlinking && 'animate-pulse ring-2 ring-destructive border-destructive bg-destructive/10',
           )}
         />
 
@@ -110,6 +172,7 @@ export function ExerciseRow({
               exercise.muscle
                 ? 'border border-primary/30 bg-accent text-accent-foreground hover:border-primary/60'
                 : 'border border-dashed border-muted-foreground/40 text-muted-foreground/70 hover:border-muted-foreground hover:text-foreground',
+              exercise.isManualTagged && 'ring-1 ring-primary/40',
             )}
           >
             {exercise.muscle ?? '미지정'}
@@ -117,7 +180,10 @@ export function ExerciseRow({
           {pickerOpen && (
             <MuscleTagPicker
               value={exercise.muscle}
-              onSelect={onMuscleChange}
+              onSelect={(muscle) => {
+                onMuscleChange(muscle)
+                setPickerOpen(false)
+              }}
               onClose={() => setPickerOpen(false)}
             />
           )}
@@ -161,7 +227,7 @@ export function ExerciseRow({
           <div className="border-t border-border px-2 pb-2 pt-2">
             {invalid && (
               <p className="px-1 pb-2 text-[11px] font-medium text-destructive">
-                운동 이름을 입력해야 기록이 저장됩니다.
+                운동 이름을 먼저 입력해야 세트/무게 기록을 진행할 수 있습니다.
               </p>
             )}
 
@@ -180,8 +246,10 @@ export function ExerciseRow({
                   </span>
                   <input
                     value={set.weight}
+                    onFocus={handleSetFocus}
+                    onKeyDown={handleKeyDown}
                     onChange={(event) =>
-                      onSetChange(set.id, 'weight', event.target.value)
+                      handleWeightChange(set.id, event.target.value)
                     }
                     inputMode="decimal"
                     placeholder="0"
@@ -190,8 +258,10 @@ export function ExerciseRow({
                   />
                   <input
                     value={set.reps}
+                    onFocus={handleSetFocus}
+                    onKeyDown={handleKeyDown}
                     onChange={(event) =>
-                      onSetChange(set.id, 'reps', event.target.value)
+                      handleRepsChange(set.id, event.target.value)
                     }
                     inputMode="numeric"
                     placeholder="0"
