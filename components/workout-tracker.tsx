@@ -14,6 +14,7 @@ import {
   SPLITS,
   createEmptyExercise,
   createEmptySet,
+  resetExerciseItem,
   type Exercise,
   type MuscleGroup,
   type SplitId,
@@ -148,7 +149,7 @@ export function WorkoutTracker() {
     updateDay(dayId, (list) => {
       // 예외 3: 마지막 남은 운동 항목 삭제 시 삭제 대신 빈칸으로 리셋
       if (list.length === 1) {
-        return [createEmptyExercise()]
+        return [resetExerciseItem(list[0].id)]
       }
       return list.filter((item) => item.id !== id)
     })

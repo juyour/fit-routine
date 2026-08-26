@@ -72,6 +72,10 @@ export function createEmptyExercise(muscle: MuscleGroup | null = null): Exercise
   return { id: uid('ex'), name: '', muscle, sets: [createEmptySet()], isManualTagged: false }
 }
 
+export function resetExerciseItem(id?: string): Exercise {
+  return { id: id ?? uid('ex'), name: '', muscle: null, sets: [createEmptySet()], isManualTagged: false }
+}
+
 /** Mock-AI 키워드 딕셔너리 (Key: 검색어, Value: 부위) */
 export const WORKOUT_KEYWORD_DICT: Record<string, MuscleGroup> = {
   // 가슴

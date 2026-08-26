@@ -97,6 +97,21 @@ export function ExerciseRow({
     }
   }
 
+  // 예외 4: 붙여넣기 시 비정상 입력 차단
+  function handleWeightPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const pasteData = event.clipboardData.getData('text')
+    if (!/^\d*\.?\d*$/.test(pasteData) || pasteData.includes('-') || pasteData.includes(' ')) {
+      event.preventDefault()
+    }
+  }
+
+  function handleRepsPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+    const pasteData = event.clipboardData.getData('text')
+    if (!/^\d*$/.test(pasteData) || pasteData.includes('-') || pasteData.includes(' ')) {
+      event.preventDefault()
+    }
+  }
+
   // 예외 4: 무게 입력 마스킹 (숫자 + 소수점 1개까지)
   function handleWeightChange(setId: string, value: string) {
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
@@ -248,6 +263,7 @@ export function ExerciseRow({
                     value={set.weight}
                     onFocus={handleSetFocus}
                     onKeyDown={handleKeyDown}
+                    onPaste={handleWeightPaste}
                     onChange={(event) =>
                       handleWeightChange(set.id, event.target.value)
                     }
@@ -260,6 +276,7 @@ export function ExerciseRow({
                     value={set.reps}
                     onFocus={handleSetFocus}
                     onKeyDown={handleKeyDown}
+                    onPaste={handleRepsPaste}
                     onChange={(event) =>
                       handleRepsChange(set.id, event.target.value)
                     }
