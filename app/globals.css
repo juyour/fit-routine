@@ -33,9 +33,9 @@
 
 :root {
   color-scheme: dark;
-  /* Kinetic Pulse Design System (Deep Dark Navy & Electric Blue) */
+  /* Kinetic Grid / Pulse Design System (Deep Dark Navy & Electric Blue) */
   --background: #0b1326;
-  --foreground: #ffffff;
+  --foreground: #dae2fd;
   --card: #131b2e;
   --card-foreground: #ffffff;
   --popover: #131b2e;
@@ -44,10 +44,10 @@
   --primary-foreground: #ffffff;
   --secondary: #1c263d;
   --secondary-foreground: #ffffff;
-  --muted: #1c263d;
-  --muted-foreground: #9ca3af;
+  --muted: #171f33;
+  --muted-foreground: #94a3b8;
   --accent: #1c263d;
-  --accent-foreground: #60a5fa;
+  --accent-foreground: #3b82f6;
   --destructive: #ef4444;
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.12);
@@ -72,7 +72,16 @@
   }
 }
 
-/* Glassmorphism and Glow Utilities */
+/* Kinetic Grid Custom Utility Classes from code.html */
+.glass-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
 .glass-panel {
   background: rgba(19, 27, 46, 0.75);
   backdrop-filter: blur(12px);
@@ -80,10 +89,20 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.glow-text {
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.bg-grid-pattern {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
 .electric-glow {
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 0 25px rgba(37, 99, 235, 0.4);
 }
 
 .electric-glow-sm {
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.25);
 }
