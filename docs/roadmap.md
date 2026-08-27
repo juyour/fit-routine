@@ -1,6 +1,6 @@
 # 🗺️ FitRoutine 개발 로드맵 (Roadmap)
 
-본 로드맵은 PRD 요구사항 기반의 클라이언트 코어 기능(Sprint 1~4)과 **Google Gemini AI 지능형 서비스 확장(Sprint 5~6)** 개발 현황입니다.
+본 로드맵은 PRD 요구사항 기반의 클라이언트 코어 기능(Sprint 1~4), **Google Gemini AI 지능형 서비스 확장(Sprint 5~6)**, 그리고 **Kinetic Grid Design System 전면 리뉴얼(Sprint 7)** 개발 현황입니다.
 
 ---
 
@@ -8,7 +8,7 @@
 
 ```mermaid
 gantt
-    title FitRoutine 전체 로드맵 완료 현황
+    title FitRoutine 전체 로드맵 현황
     dateFormat  YYYY-MM-DD
     section Phase 1 (Core SPA)
     Sprint 1 데이터 모델 & Mock-AI          :done, s1, 2026-08-26, 1d
@@ -18,6 +18,8 @@ gantt
     section Phase 2 (Gemini AI)
     Sprint 5 하이브리드 AI 태깅 & 자연어 파서:done, s5, 2026-08-27, 1d
     Sprint 6 1:1 맞춤형 AI 루틴 코칭 & 추천 :done, s6, 2026-08-27, 1d
+    section Phase 3 (Kinetic Grid Design)
+    Sprint 7 Kinetic Grid 디자인 시스템 리뉴얼:active, s7, 2026-08-27, 1d
 ```
 
 ---
@@ -33,11 +35,10 @@ gantt
 ---
 
 ### [Phase 2: Google Gemini AI 서비스 고도화 (🟢 완료)]
+- **Sprint 5:** 하이브리드 AI 자동 태깅 & 자연어 기록 시스템 ([`sprint-5-gemini-ai-integration.md`](./sprints/sprint-5-gemini-ai-integration.md))
+- **Sprint 6:** 1:1 맞춤형 AI 루틴 분석 & 볼륨 코칭 시스템 ([`sprint-6-ai-workout-coach.md`](./sprints/sprint-6-ai-workout-coach.md))
 
-#### 🤖 Sprint 5: 하이브리드 AI 자동 태깅 & 자연어 기록 시스템 (🟢 완료)
-- **핵심 목표:** 딕셔너리 초고속 매칭 + Gemini 2.5 Flash 실시간 심층 분류 하이브리드 엔진 구축 & 자연어 한 줄 기록 파서 지원
-- **산출물:** [`lib/gemini.ts`](../lib/gemini.ts), [`app/api/gemini/`](../app/api/gemini/), [`components/ai-quick-log-modal.tsx`](../components/ai-quick-log-modal.tsx), [`docs/sprints/sprint-5-gemini-ai-integration.md`](./sprints/sprint-5-gemini-ai-integration.md)
+---
 
-#### 🧠 Sprint 6: 1:1 맞춤형 AI 루틴 분석 & 볼륨 코칭 시스템 (🟢 완료)
-- **핵심 목표:** 루틴별 볼륨/부위 밸런스 AI 진단 및 맞춤 피드백 패널
-- **산출물:** [`components/ai-coach-panel.tsx`](../components/ai-coach-panel.tsx), [`docs/sprints/sprint-6-ai-workout-coach.md`](./sprints/sprint-6-ai-workout-coach.md)
+### [Phase 3: Kinetic Pulse Design System 리뉴얼 (🟡 진행 예정)]
+- **Sprint 7:** Deep Dark Navy (`#0b1326`) 및 Electric Blue (`#2563eb`) 기반의 고기능성 다크 UI 리뉴얼 ([`sprint-7-kinetic-pulse-design-system.md`](./sprints/sprint-7-kinetic-pulse-design-system.md))
