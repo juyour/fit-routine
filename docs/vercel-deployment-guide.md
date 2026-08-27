@@ -4,8 +4,15 @@
 
 ---
 
+## 🌐 프로덕션 라이브 URL
+- **공식 배포 주소:** [https://fit-routine-jade.vercel.app](https://fit-routine-jade.vercel.app)
+- **대시보드:** [https://vercel.com/fit-routine/fit-routine](https://vercel.com/fit-routine/fit-routine)
+
+---
+
 ## 📋 사전 준비 사항
-- Vercel 계정 (가입 완료 상태)
+- Vercel 계정 연동 완료 (`fit-routine/fit-routine`)
+- Gemini API 키 프로덕션 환경 변수 등록 완료 (`GEMINI_API_KEY`)
 - Vercel CLI 로컬 설치 완료 (`npx vercel` v59.7.0)
 
 ---
