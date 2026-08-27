@@ -23,6 +23,7 @@ import {
 import { SplitSelector } from '@/components/split-selector'
 import { TagFilter, type MuscleFilter } from '@/components/tag-filter'
 import { DaySection } from '@/components/day-section'
+import { AiQuickLogModal } from '@/components/ai-quick-log-modal'
 import { cn } from '@/lib/utils'
 
 type SavedExerciseItem = {
@@ -45,6 +46,7 @@ export function WorkoutTracker() {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [dragId, setDragId] = useState<string | null>(null)
   const [dragOverId, setDragOverId] = useState<string | null>(null)
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false)
 
   const days = routines[split]
   const activeDay = days.find((day) => day.id === activeDayId) ?? days[0]
@@ -145,6 +147,20 @@ export function WorkoutTracker() {
     setExpandedId(next.id)
   }
 
+  function handleAddAiExercises(newExercises: Exercise[]) {
+    if (!activeDay || newExercises.length === 0) return
+    updateDay(activeDay.id, (list) => {
+      // 만약 기존에 빈칸 운동 1개만 있었다면 교체
+      if (list.length === 1 && list[0].name.trim() === '') {
+        return newExercises
+      }
+      return [...list, ...newExercises]
+    })
+    setCollapsedDays((prev) => ({ ...prev, [activeDay.id]: false }))
+    setActiveDayId(activeDay.id)
+    setExpandedId(newExercises[0].id)
+  }
+
   function removeExercise(dayId: string, id: string) {
     updateDay(dayId, (list) => {
       // 예외 3: 마지막 남은 운동 항목 삭제 시 삭제 대신 빈칸으로 리셋
@@ -195,35 +211,53 @@ export function WorkoutTracker() {
             <Dumbbell className="size-4.5" />
           </span>
           <div className="flex flex-col">
-            <h1 className="text-base font-bold leading-tight tracking-tight">
-              FitRoutine
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-base font-bold leading-tight tracking-tight">
+                FitRoutine
+              </h1>
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                <Sparkles className="size-3" />
+                Gemini AI
+              </span>
+            </div>
             <p className="text-[11px] leading-tight text-muted-foreground">
               {currentSplit?.label} · {days.length}개 일자 (자유 편집 가능)
             </p>
           </div>
         </div>
-        <dl className="flex items-center gap-4">
-          <div className="flex flex-col items-end">
-            <dt className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-              Sets
-            </dt>
-            <dd className="font-mono text-lg font-semibold leading-none tabular-nums">
-              {totalSets}
-            </dd>
-          </div>
-          <div className="flex flex-col items-end">
-            <dt className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-              Volume
-            </dt>
-            <dd className="font-mono text-lg font-semibold leading-none tabular-nums">
-              {totalVolume.toLocaleString()}
-              <span className="ml-0.5 text-[11px] font-normal text-muted-foreground">
-                kg
-              </span>
-            </dd>
-          </div>
-        </dl>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setIsAiModalOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg border border-primary/40 bg-accent/60 px-3 py-1.5 text-xs font-bold text-primary shadow-xs transition-all hover:bg-primary hover:text-primary-foreground active:scale-95"
+          >
+            <Sparkles className="size-3.5" />
+            AI 빠른 기록
+          </button>
+
+          <dl className="flex items-center gap-3">
+            <div className="flex flex-col items-end">
+              <dt className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                Sets
+              </dt>
+              <dd className="font-mono text-base font-semibold leading-none tabular-nums">
+                {totalSets}
+              </dd>
+            </div>
+            <div className="flex flex-col items-end">
+              <dt className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                Volume
+              </dt>
+              <dd className="font-mono text-base font-semibold leading-none tabular-nums">
+                {totalVolume.toLocaleString()}
+                <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">
+                  kg
+                </span>
+              </dd>
+            </div>
+          </dl>
+        </div>
       </header>
 
       {/* 상단 분할 선택기 */}
@@ -381,17 +415,34 @@ export function WorkoutTracker() {
         </div>
       </section>
 
-      {/* 하단 고정 플로팅 액션 버튼 */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center bg-gradient-to-t from-background via-background/90 to-transparent pb-6 pt-10">
+      {/* 하단 고정 플로팅 액션 버튼 영역 */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex items-center justify-center gap-2.5 bg-gradient-to-t from-background via-background/90 to-transparent pb-6 pt-10 px-4">
+        <button
+          type="button"
+          onClick={() => setIsAiModalOpen(true)}
+          className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-primary/40 bg-card/90 px-4 py-3.5 text-xs font-bold text-primary shadow-lg backdrop-blur-sm transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <Sparkles className="size-4" />
+          AI 빠른 기록
+        </button>
+
         <button
           type="button"
           onClick={() => activeDay && addExercise(activeDay.id)}
-          className="pointer-events-auto flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="pointer-events-auto flex items-center gap-2 rounded-full bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           <Plus className="size-4.5" />
           {activeDay ? `${activeDay.title}에 운동 추가` : '운동 추가'}
         </button>
       </div>
+
+      {/* AI 자연어 빠른 기록 모달 */}
+      <AiQuickLogModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onAddExercises={handleAddAiExercises}
+        dayTitle={activeDay?.title ?? '현재 루틴'}
+      />
     </main>
   )
 }

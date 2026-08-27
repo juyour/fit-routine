@@ -60,10 +60,41 @@ export function ExerciseRow({
     0,
   )
 
+  const classifyTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const [isAiClassifying, setIsAiClassifying] = useState(false)
+
   function handleNameChange(value: string) {
     if (!exercise.isManualTagged) {
       const autoMatched = matchMuscleByKeyword(value)
-      onRename(value, autoMatched)
+      if (autoMatched) {
+        onRename(value, autoMatched)
+      } else {
+        onRename(value, null)
+        // 2차: Gemini AI 서버 분류 (600ms 디바운스)
+        if (value.trim().length >= 2) {
+          if (classifyTimerRef.current) clearTimeout(classifyTimerRef.current)
+          classifyTimerRef.current = setTimeout(async () => {
+            try {
+              setIsAiClassifying(true)
+              const res = await fetch('/api/gemini/classify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: value }),
+              })
+              if (res.ok) {
+                const data = await res.json()
+                if (data.muscle && !exercise.isManualTagged) {
+                  onRename(value, data.muscle)
+                }
+              }
+            } catch (err) {
+              console.error(err)
+            } finally {
+              setIsAiClassifying(false)
+            }
+          }, 600)
+        }
+      }
     } else {
       onRename(value)
     }
@@ -183,14 +214,18 @@ export function ExerciseRow({
             aria-expanded={pickerOpen}
             aria-label="부위 태그 선택"
             className={cn(
-              'rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors',
+              'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors',
               exercise.muscle
                 ? 'border border-primary/30 bg-accent text-accent-foreground hover:border-primary/60'
                 : 'border border-dashed border-muted-foreground/40 text-muted-foreground/70 hover:border-muted-foreground hover:text-foreground',
               exercise.isManualTagged && 'ring-1 ring-primary/40',
             )}
           >
-            {exercise.muscle ?? '미지정'}
+            {isAiClassifying ? (
+              <span className="animate-pulse text-primary font-bold">AI 분류중...</span>
+            ) : (
+              exercise.muscle ?? '미지정'
+            )}
           </button>
           {pickerOpen && (
             <MuscleTagPicker
