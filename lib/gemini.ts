@@ -88,30 +88,73 @@ export async function parseWorkoutTextWithGemini(text: string): Promise<ParsedWo
 }
 
 /**
- * 3. AI 루틴 진단 및 추천 코치
- * 현재 작성된 루틴의 볼륨과 부위 밸런스를 분석하여 맞춤 피드백 및 추천 운동을 제공합니다.
+ * 3. AI 루틴 진단 및 추천 코치 (피드백 텍스트 + 구조화된 추천 운동 배열)
  */
-export async function getRoutineAiCoaching(routineTitle: string, exercises: any[]): Promise<string> {
-  if (!apiKey) return 'Gemini API 키가 설정되지 않았습니다.'
+export type RecommendedExerciseItem = {
+  name: string
+  muscle: MuscleGroup | null
+  reason?: string
+  sets: Array<{ weight: string; reps: string }>
+}
+
+export type AiCoachingResult = {
+  feedbackText: string
+  recommendedExercises: RecommendedExerciseItem[]
+}
+
+export async function getRoutineAiCoaching(routineTitle: string, exercises: any[]): Promise<AiCoachingResult> {
+  if (!apiKey) {
+    return {
+      feedbackText: 'Gemini API 키가 설정되지 않았습니다.',
+      recommendedExercises: [],
+    }
+  }
 
   try {
     const response = await geminiClient.models.generateContent({
       model: GEMINI_MODEL,
       contents: `당신은 친절하고 전문적인 1:1 퍼스널 트레이너(PT)입니다.
-현재 사용자의 루틴 "${routineTitle}"에 등록된 운동 목록을 보고 3줄 이내로 핵심 코칭과 추천을 제공하세요.
+현재 사용자의 루틴 "${routineTitle}"에 등록된 운동 목록을 보고 볼륨과 밸런스를 진단한 뒤, 피드백과 함께 루틴에 바로 추가할 수 있는 추천 보완 운동(1~2개)을 순수 JSON 형식으로 출력하세요.
 
 현재 등록된 운동:
 ${JSON.stringify(exercises, null, 2)}
 
-피드백 형식:
-- 1) 루틴 총평 (볼륨 및 밸런스)
-- 2) 추천 보완 운동 1~2개
-- 3) 안전 및 수행 팁`,
+출력 JSON 스키마:
+{
+  "feedbackText": "1) 루틴 총평 (볼륨/밸런스 평가)\\n2) 추천 보완 이유\\n3) 안전 및 수행 팁",
+  "recommendedExercises": [
+    {
+      "name": "추천 운동명 (예: 인클라인 덤벨 프레스)",
+      "muscle": "가슴|등|어깨|삼두|이두|전완|하체 중 1개",
+      "reason": "추천 이유 (예: 상부 가슴 볼륨 보완)",
+      "sets": [
+        { "weight": "20", "reps": "12" },
+        { "weight": "22", "reps": "10" },
+        { "weight": "24", "reps": "8" }
+      ]
+    }
+  ]
+}
+
+규칙:
+- 반드시 유효한 JSON 포맷으로만 응답하세요.
+- 마크다운 코드블록(\`\`\`json)이나 부가 텍스트는 절대 포함하지 마세요.
+- 추천 운동의 세트는 입문자~중급자가 수행하기 좋은 3세트 권장 무게와 횟수를 포함하세요.`,
     })
 
-    return response.text?.trim() || '루틴 분석에 실패했습니다.'
+    let raw = response.text?.trim() || '{}'
+    raw = raw.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim()
+    const parsed = JSON.parse(raw) as AiCoachingResult
+
+    return {
+      feedbackText: parsed.feedbackText || '루틴 분석이 완료되었습니다.',
+      recommendedExercises: Array.isArray(parsed.recommendedExercises) ? parsed.recommendedExercises : [],
+    }
   } catch (error: any) {
     console.error('Gemini Coaching Error:', error?.message || error)
-    return `루틴 분석 중 오류가 발생했습니다: ${error?.message || '잠시 후 다시 시도해주세요.'}`
+    return {
+      feedbackText: `루틴 분석 중 오류가 발생했습니다: ${error?.message || '잠시 후 다시 시도해주세요.'}`,
+      recommendedExercises: [],
+    }
   }
 }

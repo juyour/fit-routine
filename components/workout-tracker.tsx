@@ -149,15 +149,20 @@ export function WorkoutTracker() {
 
   function handleAddAiExercises(newExercises: Exercise[]) {
     if (!activeDay || newExercises.length === 0) return
-    updateDay(activeDay.id, (list) => {
+    handleAddDayAiExercises(activeDay.id, newExercises)
+  }
+
+  function handleAddDayAiExercises(dayId: string, newExercises: Exercise[]) {
+    if (newExercises.length === 0) return
+    updateDay(dayId, (list) => {
       // 만약 기존에 빈칸 운동 1개만 있었다면 교체
       if (list.length === 1 && list[0].name.trim() === '') {
         return newExercises
       }
       return [...list, ...newExercises]
     })
-    setCollapsedDays((prev) => ({ ...prev, [activeDay.id]: false }))
-    setActiveDayId(activeDay.id)
+    setCollapsedDays((prev) => ({ ...prev, [dayId]: false }))
+    setActiveDayId(dayId)
     setExpandedId(newExercises[0].id)
   }
 
@@ -286,6 +291,7 @@ export function WorkoutTracker() {
             }
             onActivate={() => setActiveDayId(day.id)}
             onAddExercise={() => addExercise(day.id)}
+            onAddExercises={(newExercises) => handleAddDayAiExercises(day.id, newExercises)}
             onToggleExercise={(id) =>
               setExpandedId((prev) => (prev === id ? null : id))
             }

@@ -26,6 +26,7 @@ type DaySectionProps = {
   onToggleCollapse: () => void
   onActivate: () => void
   onAddExercise: () => void
+  onAddExercises: (exercises: Exercise[]) => void
   onToggleExercise: (id: string) => void
   onPatch: (id: string, patch: Partial<Exercise>) => void
   onPatchDay: (patch: Partial<WorkoutDay>) => void
@@ -47,6 +48,7 @@ export function DaySection({
   onToggleCollapse,
   onActivate,
   onAddExercise,
+  onAddExercises,
   onToggleExercise,
   onPatch,
   onPatchDay,
@@ -335,10 +337,7 @@ export function DaySection({
             {/* 1:1 Gemini AI 루틴 코칭 & 밸런스 피드백 패널 */}
             <AiCoachPanel
               day={day}
-              onAddExercise={(newEx) => {
-                onPatch(newEx.id, newEx)
-                onAddExercise()
-              }}
+              onAddExercises={onAddExercises}
             />
 
             <button
