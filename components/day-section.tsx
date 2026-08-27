@@ -131,7 +131,7 @@ export function DaySection({
 
           <div className="flex min-w-0 flex-1 flex-col gap-1">
             <div className="flex items-baseline gap-2">
-              <h2 className="truncate text-[15px] font-bold leading-none tracking-tight">
+              <h2 className="truncate text-[15px] font-bold leading-snug tracking-tight text-white py-0.5">
                 {day.title}
               </h2>
               <span className="shrink-0 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">

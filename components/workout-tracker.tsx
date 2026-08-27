@@ -199,57 +199,44 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-4 pb-36 pt-5">
-      {/* 헤더 영역 */}
-      <header className="flex items-center justify-between gap-4 pb-4">
-        <div className="flex items-center gap-3">
-          {onGoHome ? (
-            <button
-              type="button"
-              onClick={onGoHome}
-              aria-label="소개 홈으로 이동"
-              title="소개 홈으로 이동"
-              className="flex size-10 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all hover:border-blue-400 hover:shadow-[0_0_22px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95"
-            >
-              <NeonDumbbellIcon size={22} />
-            </button>
-          ) : (
-            <span className="flex size-10 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_15px_rgba(37,99,235,0.3)]">
-              <NeonDumbbellIcon size={22} />
-            </span>
-          )}
+      {/* 헤더 영역 (모바일 최적화 반응형 2-단 구조) */}
+      <header className="flex flex-col gap-3 pb-3">
+        {/* 상단 1열: 로고 + 타이틀 + 세트/볼륨 통계 */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            {onGoHome ? (
+              <button
+                type="button"
+                onClick={onGoHome}
+                aria-label="소개 홈으로 이동"
+                title="소개 홈으로 이동"
+                className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_12px_rgba(37,99,235,0.3)] transition-all hover:border-blue-400 hover:shadow-[0_0_20px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95"
+              >
+                <NeonDumbbellIcon size={20} />
+              </button>
+            ) : (
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_12px_rgba(37,99,235,0.3)]">
+                <NeonDumbbellIcon size={20} />
+              </span>
+            )}
 
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold leading-tight tracking-tight text-white">
+            <div className="flex items-center gap-2 min-w-0">
+              <h1 className="text-base font-bold leading-tight tracking-tight text-white shrink-0">
                 FitRoutine
               </h1>
-              <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-400">
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-400 shrink-0">
                 <Sparkles className="size-3" />
                 Gemini AI
               </span>
             </div>
-            <p className="text-[11px] leading-tight text-muted-foreground">
-              {currentSplit?.label} · {days.length}개 일자 (자유 편집 가능)
-            </p>
           </div>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setIsAiModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-primary/40 bg-accent/60 px-3 py-1.5 text-xs font-bold text-primary shadow-xs transition-all hover:bg-primary hover:text-primary-foreground active:scale-95"
-          >
-            <Sparkles className="size-3.5" />
-            AI 빠른 기록
-          </button>
-
-          <dl className="flex items-center gap-3">
+          <dl className="flex items-center gap-3 shrink-0">
             <div className="flex flex-col items-end">
               <dt className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/70">
                 Sets
               </dt>
-              <dd className="font-mono text-base font-semibold leading-none tabular-nums">
+              <dd className="font-mono text-sm font-bold leading-none tabular-nums text-white">
                 {totalSets}
               </dd>
             </div>
@@ -257,14 +244,30 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
               <dt className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/70">
                 Volume
               </dt>
-              <dd className="font-mono text-base font-semibold leading-none tabular-nums">
+              <dd className="font-mono text-sm font-bold leading-none tabular-nums text-blue-400">
                 {totalVolume.toLocaleString()}
-                <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">
+                <span className="ml-0.5 text-[9px] font-normal text-muted-foreground">
                   kg
                 </span>
               </dd>
             </div>
           </dl>
+        </div>
+
+        {/* 상단 2열: 루틴 분할 설명 및 AI 빠른 기록 버튼 */}
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <p className="truncate text-xs font-medium text-muted-foreground">
+            {currentSplit?.label} · {days.length}개 일자 (자유 편집 가능)
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setIsAiModalOpen(true)}
+            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-1.5 text-xs font-bold text-blue-400 shadow-sm transition-all hover:bg-blue-600 hover:text-white active:scale-95 whitespace-nowrap"
+          >
+            <Sparkles className="size-3.5" />
+            AI 빠른 기록
+          </button>
         </div>
       </header>
 
