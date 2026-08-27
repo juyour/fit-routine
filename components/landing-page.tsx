@@ -19,6 +19,8 @@ import {
   Zap,
 } from 'lucide-react'
 
+import { NeonDumbbellIcon } from '@/components/neon-dumbbell-icon'
+
 type LandingPageProps = {
   onStartTracker?: () => void
 }
@@ -30,8 +32,8 @@ export function LandingPage({ onStartTracker }: LandingPageProps) {
       <header className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#0b1326]/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-8">
           <div className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-md shadow-blue-600/30">
-              <Zap className="size-4.5 fill-white text-white" />
+            <span className="flex size-8 items-center justify-center rounded-lg border border-blue-500/30 bg-[#0f172a] shadow-[0_0_12px_rgba(37,99,235,0.3)]">
+              <NeonDumbbellIcon size={18} />
             </span>
             <span className="font-mono text-base font-bold tracking-tight text-white sm:text-lg">
               KINETIC <span className="text-blue-400 font-sans font-semibold text-sm">FitRoutine</span>

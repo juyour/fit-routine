@@ -24,7 +24,7 @@ import { SplitSelector } from '@/components/split-selector'
 import { TagFilter, type MuscleFilter } from '@/components/tag-filter'
 import { DaySection } from '@/components/day-section'
 import { AiQuickLogModal } from '@/components/ai-quick-log-modal'
-import { NeonHomeIcon } from '@/components/neon-home-icon'
+import { NeonDumbbellIcon } from '@/components/neon-dumbbell-icon'
 import { cn } from '@/lib/utils'
 
 type SavedExerciseItem = {
@@ -210,11 +210,11 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
               title="소개 홈으로 이동"
               className="flex size-10 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all hover:border-blue-400 hover:shadow-[0_0_22px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95"
             >
-              <NeonHomeIcon size={22} />
+              <NeonDumbbellIcon size={22} />
             </button>
           ) : (
             <span className="flex size-10 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_15px_rgba(37,99,235,0.3)]">
-              <NeonHomeIcon size={22} />
+              <NeonDumbbellIcon size={22} />
             </span>
           )}
 
