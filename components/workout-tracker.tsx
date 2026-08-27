@@ -24,6 +24,7 @@ import { SplitSelector } from '@/components/split-selector'
 import { TagFilter, type MuscleFilter } from '@/components/tag-filter'
 import { DaySection } from '@/components/day-section'
 import { AiQuickLogModal } from '@/components/ai-quick-log-modal'
+import { NeonHomeIcon } from '@/components/neon-home-icon'
 import { cn } from '@/lib/utils'
 
 type SavedExerciseItem = {
@@ -215,9 +216,9 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
                   onClick={onGoHome}
                   aria-label="홈 소개 페이지로 이동"
                   title="홈 소개 페이지로 이동"
-                  className="flex size-6 items-center justify-center rounded-md border border-border/80 bg-card text-xs transition-colors hover:border-primary/50 hover:bg-accent/40 active:scale-95"
+                  className="flex size-7 items-center justify-center rounded-lg border border-blue-500/30 bg-[#131b2e] shadow-[0_0_12px_rgba(37,99,235,0.25)] transition-all hover:border-blue-400 hover:shadow-[0_0_18px_rgba(37,99,235,0.45)] hover:scale-105 active:scale-95"
                 >
-                  🏠
+                  <NeonHomeIcon size={18} />
                 </button>
               )}
               <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
