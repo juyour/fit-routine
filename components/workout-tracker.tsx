@@ -35,7 +35,11 @@ type SavedExerciseItem = {
   exercise: Exercise
 }
 
-export function WorkoutTracker() {
+type WorkoutTrackerProps = {
+  onGoHome?: () => void
+}
+
+export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
   const [split, setSplit] = useState<SplitId>('three')
   const [filter, setFilter] = useState<MuscleFilter>('all')
   const [routines, setRoutines] = useState<Record<SplitId, WorkoutDay[]>>(
@@ -220,6 +224,15 @@ export function WorkoutTracker() {
               <h1 className="text-base font-bold leading-tight tracking-tight">
                 FitRoutine
               </h1>
+              {onGoHome && (
+                <button
+                  type="button"
+                  onClick={onGoHome}
+                  className="rounded border border-border bg-card px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                >
+                  ← 소개 홈
+                </button>
+              )}
               <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
                 <Sparkles className="size-3" />
                 Gemini AI
