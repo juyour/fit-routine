@@ -3,6 +3,9 @@ import { MUSCLE_GROUPS, type MuscleGroup } from '@/lib/workout-data'
 
 const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || ''
 
+/** 활성 Gemini 모델 상수 */
+export const GEMINI_MODEL = 'gemini-3.6-flash'
+
 /** Gemini AI 클라이언트 인스턴스 */
 export const geminiClient = new GoogleGenAI({ apiKey })
 
@@ -15,7 +18,7 @@ export async function classifyExerciseWithGemini(exerciseName: string): Promise<
 
   try {
     const response = await geminiClient.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: `당신은 전문 보디빌딩 & 피트니스 트레이너입니다.
 운동명 "${exerciseName}"의 주요 타겟 근육 부위를 오직 아래 7개 목록 중 가장 알맞은 단 1개만 골라서 단어로만 답하세요.
 선택 가능 목록: [가슴, 등, 어깨, 삼두, 이두, 전완, 하체]
@@ -30,8 +33,8 @@ export async function classifyExerciseWithGemini(exerciseName: string): Promise<
       return text as MuscleGroup
     }
     return null
-  } catch (error) {
-    console.error('Gemini Classification Error:', error)
+  } catch (error: any) {
+    console.error('Gemini Classification Error:', error?.message || error)
     return null
   }
 }
@@ -51,7 +54,7 @@ export async function parseWorkoutTextWithGemini(text: string): Promise<ParsedWo
 
   try {
     const response = await geminiClient.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: `당신은 피트니스 데이터 파서입니다.
 사용자가 입력한 운동 기록 문장을 분석하여 순수 JSON 배열 형식으로 반환하세요.
 
@@ -78,8 +81,8 @@ export async function parseWorkoutTextWithGemini(text: string): Promise<ParsedWo
     raw = raw.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim()
     const parsed = JSON.parse(raw) as ParsedWorkoutItem[]
     return Array.isArray(parsed) ? parsed : []
-  } catch (error) {
-    console.error('Gemini Parsing Error:', error)
+  } catch (error: any) {
+    console.error('Gemini Parsing Error:', error?.message || error)
     return []
   }
 }
@@ -93,7 +96,7 @@ export async function getRoutineAiCoaching(routineTitle: string, exercises: any[
 
   try {
     const response = await geminiClient.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: `당신은 친절하고 전문적인 1:1 퍼스널 트레이너(PT)입니다.
 현재 사용자의 루틴 "${routineTitle}"에 등록된 운동 목록을 보고 3줄 이내로 핵심 코칭과 추천을 제공하세요.
 
@@ -107,8 +110,8 @@ ${JSON.stringify(exercises, null, 2)}
     })
 
     return response.text?.trim() || '루틴 분석에 실패했습니다.'
-  } catch (error) {
-    console.error('Gemini Coaching Error:', error)
-    return '루틴 분석 중 오류가 발생했습니다.'
+  } catch (error: any) {
+    console.error('Gemini Coaching Error:', error?.message || error)
+    return `루틴 분석 중 오류가 발생했습니다: ${error?.message || '잠시 후 다시 시도해주세요.'}`
   }
 }
