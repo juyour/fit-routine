@@ -48,8 +48,6 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
   const [collapsedDays, setCollapsedDays] = useState<Record<string, boolean>>({})
   const [activeDayId, setActiveDayId] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [dragId, setDragId] = useState<string | null>(null)
-  const [dragOverId, setDragOverId] = useState<string | null>(null)
   const [isAiModalOpen, setIsAiModalOpen] = useState(false)
 
   const days = routines[split]
@@ -180,19 +178,6 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
     })
   }
 
-  function reorder(dayId: string) {
-    if (!dragId || !dragOverId || dragId === dragOverId) return
-    updateDay(dayId, (list) => {
-      const from = list.findIndex((item) => item.id === dragId)
-      const to = list.findIndex((item) => item.id === dragOverId)
-      if (from === -1 || to === -1) return list
-      const next = [...list]
-      const [moved] = next.splice(from, 1)
-      next.splice(to, 0, moved)
-      return next
-    })
-  }
-
   function selectSplit(next: SplitId) {
     setSplit(next)
     setActiveDayId(null)
@@ -296,8 +281,6 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
             collapsed={collapsedDays[day.id] ?? false}
             isActive={activeDay?.id === day.id}
             expandedId={expandedId}
-            dragId={dragId}
-            dragOverId={dragOverId}
             onToggleCollapse={() =>
               setCollapsedDays((prev) => ({
                 ...prev,
@@ -313,13 +296,6 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
             onPatch={(id, patch) => patchExercise(day.id, id, patch)}
             onPatchDay={(patch) => patchDay(day.id, patch)}
             onRemove={(id) => removeExercise(day.id, id)}
-            onDragStart={setDragId}
-            onDragEnter={setDragOverId}
-            onDragEnd={() => {
-              reorder(day.id)
-              setDragId(null)
-              setDragOverId(null)
-            }}
           />
         ))}
       </div>

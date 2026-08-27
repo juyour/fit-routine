@@ -3,12 +3,14 @@
 import Link from 'next/link'
 import {
   ArrowRight,
+  ArrowUpDown,
   Bot,
   Check,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
+  ChevronUp,
   Dumbbell,
-  GripVertical,
   Layers,
   Lock,
   Play,
@@ -166,37 +168,47 @@ export function LandingPage({ onStartTracker }: LandingPageProps) {
             <div className="glass-card group flex flex-col items-center gap-8 rounded-2xl p-7 transition-colors duration-300 hover:bg-[#171f33] md:col-span-12 md:flex-row">
               <div className="flex-1 space-y-3">
                 <div className="flex size-12 items-center justify-center rounded-xl border border-white/10 bg-[#222a3d] text-blue-400">
-                  <GripVertical className="size-6" />
+                  <ChevronUp className="size-6" />
                 </div>
-                <h3 className="text-xl font-bold text-white">자유로운 드래그 & 드롭 편집</h3>
+                <h3 className="text-xl font-bold text-white">원터치 순서 변경 & 자유로운 루틴 커스텀</h3>
                 <p className="max-w-md text-xs leading-relaxed text-gray-400 sm:text-sm">
-                  직관적인 드래그 앤 드롭으로 운동 순서를 변경하고, 세트를 손쉽게 관리하세요. 번거로운 메뉴 이동 없이 한 화면에서 모든 흐름이 완결됩니다.
+                  모바일에서도 탭 한 번으로 운동 순서를 손쉽게 변경하고 세트를 관리하세요. 번거로운 메뉴 이동 없이 한 화면에서 모든 흐름이 완결됩니다.
                 </p>
               </div>
 
-              {/* 추상 UI 프리뷰 (드래그 카드 시각화) */}
+              {/* 추상 UI 프리뷰 (원터치 순서 변경 카드 시각화) */}
               <div className="relative w-full space-y-2.5 overflow-hidden rounded-xl border border-white/10 bg-[#020617] p-4 md:w-1/2">
                 <div className="pointer-events-none absolute right-0 top-0 size-32 rounded-full bg-blue-500/10 blur-3xl" />
 
                 <div className="flex items-center justify-between rounded-lg border border-white/5 bg-[#171f33] p-3 opacity-60">
-                  <div className="flex items-center gap-2.5">
-                    <GripVertical className="size-4 text-gray-500" />
+                  <div className="flex items-center gap-2">
+                    <span className="flex size-5 items-center justify-center rounded bg-[#222a3d] font-mono text-[10px] font-bold text-gray-400">
+                      1
+                    </span>
                     <span className="font-mono text-xs font-bold text-white">Squat</span>
                   </div>
                   <span className="font-mono text-xs font-semibold text-blue-400">5 Sets</span>
                 </div>
 
                 <div className="flex items-center justify-between rounded-lg border border-blue-500/50 bg-[#171f33] p-3 shadow-[0_0_15px_rgba(37,99,235,0.25)] scale-[1.02] transition-transform">
-                  <div className="flex items-center gap-2.5">
-                    <GripVertical className="size-4 text-blue-400" />
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-blue-400 text-[10px]">▲</span>
+                      <span className="text-blue-400 text-[10px]">▼</span>
+                    </div>
+                    <span className="flex size-5 items-center justify-center rounded bg-blue-600 font-mono text-[10px] font-bold text-white">
+                      2
+                    </span>
                     <span className="font-mono text-xs font-bold text-white">Deadlift</span>
                   </div>
                   <span className="font-mono text-xs font-semibold text-blue-400">3 Sets · 2,800kg</span>
                 </div>
 
                 <div className="flex items-center justify-between rounded-lg border border-white/5 bg-[#171f33] p-3 opacity-60">
-                  <div className="flex items-center gap-2.5">
-                    <GripVertical className="size-4 text-gray-500" />
+                  <div className="flex items-center gap-2">
+                    <span className="flex size-5 items-center justify-center rounded bg-[#222a3d] font-mono text-[10px] font-bold text-gray-400">
+                      3
+                    </span>
                     <span className="font-mono text-xs font-bold text-white">Leg Press</span>
                   </div>
                   <span className="font-mono text-xs font-semibold text-blue-400">4 Sets</span>

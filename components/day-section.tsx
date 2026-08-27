@@ -21,8 +21,6 @@ type DaySectionProps = {
   collapsed: boolean
   isActive: boolean
   expandedId: string | null
-  dragId: string | null
-  dragOverId: string | null
   onToggleCollapse: () => void
   onActivate: () => void
   onAddExercise: () => void
@@ -31,9 +29,6 @@ type DaySectionProps = {
   onPatch: (id: string, patch: Partial<Exercise>) => void
   onPatchDay: (patch: Partial<WorkoutDay>) => void
   onRemove: (id: string) => void
-  onDragStart: (id: string) => void
-  onDragEnter: (id: string) => void
-  onDragEnd: () => void
 }
 
 export function DaySection({
@@ -43,8 +38,6 @@ export function DaySection({
   collapsed,
   isActive,
   expandedId,
-  dragId,
-  dragOverId,
   onToggleCollapse,
   onActivate,
   onAddExercise,
@@ -53,9 +46,6 @@ export function DaySection({
   onPatch,
   onPatchDay,
   onRemove,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
 }: DaySectionProps) {
   const [isEditingDay, setIsEditingDay] = useState(false)
   const [editTitle, setEditTitle] = useState(day.title)
@@ -302,8 +292,6 @@ export function DaySection({
                       exercise={exercise}
                       index={itemIndex}
                       expanded={expandedId === exercise.id}
-                      isDragging={dragId === exercise.id}
-                      isDragOver={dragOverId === exercise.id}
                       onToggle={() => onToggleExercise(exercise.id)}
                       onRename={(name, autoMuscle) => {
                         if (autoMuscle !== undefined) {
@@ -340,9 +328,6 @@ export function DaySection({
                           sets: [...exercise.sets, createEmptySet()],
                         })
                       }
-                      onDragStart={() => onDragStart(exercise.id)}
-                      onDragEnter={() => onDragEnter(exercise.id)}
-                      onDragEnd={onDragEnd}
                     />
                   )
                 })}
