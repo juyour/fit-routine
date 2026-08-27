@@ -1,14 +1,14 @@
 # 🗺️ FitRoutine 개발 로드맵 (Roadmap)
 
-본 로드맵은 PRD 요구사항 기반의 클라이언트 코어 기능(Sprint 1~4) 완성과, 차세대 **Google Gemini AI 지능형 서비스 확장(Sprint 5~6)** 계획을 포함합니다.
+본 로드맵은 PRD 요구사항 기반의 클라이언트 코어 기능(Sprint 1~4)과 **Google Gemini AI 지능형 서비스 확장(Sprint 5~6)** 개발 현황입니다.
 
 ---
 
-## 📊 스프린트 전체 일정 및 진행 현황
+## 📊 스프린트 전체 일정 및 완료 현황
 
 ```mermaid
 gantt
-    title FitRoutine AI 확장 로드맵
+    title FitRoutine 전체 로드맵 완료 현황
     dateFormat  YYYY-MM-DD
     section Phase 1 (Core SPA)
     Sprint 1 데이터 모델 & Mock-AI          :done, s1, 2026-08-26, 1d
@@ -16,8 +16,8 @@ gantt
     Sprint 3 인터랙션 & 일별 자유 편집       :done, s3, 2026-08-26, 1d
     Sprint 4 E2E 시나리오 & 빌드 완성       :done, s4, 2026-08-26, 1d
     section Phase 2 (Gemini AI)
-    Sprint 5 하이브리드 AI 태깅 & 자연어 파서:active, s5, 2026-08-27, 1d
-    Sprint 6 1:1 맞춤형 AI 루틴 코칭 & 추천 :s6, after s5, 1d
+    Sprint 5 하이브리드 AI 태깅 & 자연어 파서:done, s5, 2026-08-27, 1d
+    Sprint 6 1:1 맞춤형 AI 루틴 코칭 & 추천 :done, s6, 2026-08-27, 1d
 ```
 
 ---
@@ -32,12 +32,12 @@ gantt
 
 ---
 
-### [Phase 2: Google Gemini AI 서비스 고도화 (🟡 진행 중)]
+### [Phase 2: Google Gemini AI 서비스 고도화 (🟢 완료)]
 
-#### 🤖 Sprint 5: 하이브리드 AI 자동 태깅 & 자연어 기록 시스템 (진행 중)
+#### 🤖 Sprint 5: 하이브리드 AI 자동 태깅 & 자연어 기록 시스템 (🟢 완료)
 - **핵심 목표:** 딕셔너리 초고속 매칭 + Gemini 2.5 Flash 실시간 심층 분류 하이브리드 엔진 구축 & 자연어 한 줄 기록 파서 지원
-- **산출물:** [`lib/gemini.ts`](../lib/gemini.ts), [`app/api/gemini/`](../app/api/gemini/), [`docs/sprints/sprint-5-gemini-ai-integration.md`](./sprints/sprint-5-gemini-ai-integration.md)
+- **산출물:** [`lib/gemini.ts`](../lib/gemini.ts), [`app/api/gemini/`](../app/api/gemini/), [`components/ai-quick-log-modal.tsx`](../components/ai-quick-log-modal.tsx), [`docs/sprints/sprint-5-gemini-ai-integration.md`](./sprints/sprint-5-gemini-ai-integration.md)
 
-#### 🧠 Sprint 6: 1:1 맞춤형 AI 루틴 분석 & 볼륨 코칭 시스템 (예정)
-- **핵심 목표:** 루틴별 볼륨/부위 밸런스 AI 진단 및 원클릭 보완 운동 추천
-- **산출물:** [`docs/sprints/sprint-6-ai-workout-coach.md`](./sprints/sprint-6-ai-workout-coach.md)
+#### 🧠 Sprint 6: 1:1 맞춤형 AI 루틴 분석 & 볼륨 코칭 시스템 (🟢 완료)
+- **핵심 목표:** 루틴별 볼륨/부위 밸런스 AI 진단 및 맞춤 피드백 패널
+- **산출물:** [`components/ai-coach-panel.tsx`](../components/ai-coach-panel.tsx), [`docs/sprints/sprint-6-ai-workout-coach.md`](./sprints/sprint-6-ai-workout-coach.md)

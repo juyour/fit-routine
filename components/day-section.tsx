@@ -10,6 +10,7 @@ import {
   type WorkoutDay,
 } from '@/lib/workout-data'
 import { ExerciseRow } from '@/components/exercise-row'
+import { AiCoachPanel } from '@/components/ai-coach-panel'
 import type { MuscleFilter } from '@/components/tag-filter'
 import { cn } from '@/lib/utils'
 
@@ -331,10 +332,19 @@ export function DaySection({
               </ul>
             )}
 
+            {/* 1:1 Gemini AI 루틴 코칭 & 밸런스 피드백 패널 */}
+            <AiCoachPanel
+              day={day}
+              onAddExercise={(newEx) => {
+                onPatch(newEx.id, newEx)
+                onAddExercise()
+              }}
+            />
+
             <button
               type="button"
               onClick={onAddExercise}
-              className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border py-2.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-primary/50 hover:bg-accent hover:text-accent-foreground"
+              className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border py-2.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-primary/50 hover:bg-accent hover:text-accent-foreground"
             >
               <Plus className="size-3.5" />
               {day.title}에 운동 추가
