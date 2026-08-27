@@ -228,9 +228,11 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
                 <button
                   type="button"
                   onClick={onGoHome}
-                  className="rounded border border-border bg-card px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                  aria-label="홈 소개 페이지로 이동"
+                  title="홈 소개 페이지로 이동"
+                  className="flex size-6 items-center justify-center rounded-md border border-border/80 bg-card text-xs transition-colors hover:border-primary/50 hover:bg-accent/40 active:scale-95"
                 >
-                  ← 소개 홈
+                  🏠
                 </button>
               )}
               <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">

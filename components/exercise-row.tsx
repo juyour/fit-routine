@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { ChevronDown, GripVertical, Plus, Trash2, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, GripVertical, Plus, Trash2, X } from 'lucide-react'
 import {
   matchMuscleByKeyword,
   type Exercise,
@@ -20,6 +20,10 @@ type ExerciseRowProps = {
   onRename: (name: string, autoMuscle?: MuscleGroup | null) => void
   onMuscleChange: (muscle: MuscleGroup | null) => void
   onRemove: () => void
+  onMoveUp?: () => void
+  onMoveDown?: () => void
+  canMoveUp?: boolean
+  canMoveDown?: boolean
   onSetChange: (setId: string, field: 'weight' | 'reps', value: string) => void
   onSetRemove: (setId: string) => void
   onSetAdd: () => void
@@ -38,6 +42,10 @@ export function ExerciseRow({
   onRename,
   onMuscleChange,
   onRemove,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp = false,
+  canMoveDown = false,
   onSetChange,
   onSetRemove,
   onSetAdd,
@@ -176,15 +184,48 @@ export function ExerciseRow({
       )}
     >
       <div className="flex items-center gap-1 p-2">
-        <button
-          type="button"
-          aria-label={`${exercise.name || '운동'} 순서 변경 핸들`}
-          onPointerDown={() => setDraggable(true)}
-          onPointerUp={() => setDraggable(false)}
-          className="flex size-8 shrink-0 cursor-grab items-center justify-center rounded-md text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground active:cursor-grabbing active:bg-muted"
-        >
-          <GripVertical className="size-4" />
-        </button>
+        {/* 모바일 1-Tap 상/하 이동 버튼 & 데스크톱 드래그 핸들 */}
+        <div className="flex shrink-0 items-center gap-0.5">
+          <div className="flex flex-col gap-0.5">
+            <button
+              type="button"
+              disabled={!canMoveUp}
+              onClick={(e) => {
+                e.stopPropagation()
+                onMoveUp?.()
+              }}
+              aria-label={`${exercise.name || '운동'} 위로 이동`}
+              title="위로 이동"
+              className="flex size-4 items-center justify-center rounded text-muted-foreground/60 transition-colors hover:bg-muted hover:text-foreground disabled:opacity-20 active:scale-90"
+            >
+              <ChevronUp className="size-3" />
+            </button>
+            <button
+              type="button"
+              disabled={!canMoveDown}
+              onClick={(e) => {
+                e.stopPropagation()
+                onMoveDown?.()
+              }}
+              aria-label={`${exercise.name || '운동'} 아래로 이동`}
+              title="아래로 이동"
+              className="flex size-4 items-center justify-center rounded text-muted-foreground/60 transition-colors hover:bg-muted hover:text-foreground disabled:opacity-20 active:scale-90"
+            >
+              <ChevronDown className="size-3" />
+            </button>
+          </div>
+
+          <button
+            type="button"
+            aria-label={`${exercise.name || '운동'} 순서 변경 핸들`}
+            onPointerDown={() => setDraggable(true)}
+            onPointerUp={() => setDraggable(false)}
+            style={{ touchAction: 'none' }}
+            className="flex size-7 shrink-0 cursor-grab items-center justify-center rounded-md text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground active:cursor-grabbing active:bg-muted"
+          >
+            <GripVertical className="size-3.5" />
+          </button>
+        </div>
 
         <span className="w-5 shrink-0 text-center font-mono text-[11px] tabular-nums text-muted-foreground/60">
           {index + 1}

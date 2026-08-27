@@ -99,6 +99,14 @@ export function DaySection({
     )
   }
 
+  function handleMoveExercise(fromIndex: number, toIndex: number) {
+    if (toIndex < 0 || toIndex >= day.exercises.length) return
+    const next = [...day.exercises]
+    const [moved] = next.splice(fromIndex, 1)
+    next.splice(toIndex, 0, moved)
+    onPatchDay({ exercises: next })
+  }
+
   return (
     <section
       onFocus={onActivate}
@@ -286,51 +294,58 @@ export function DaySection({
               </p>
             ) : (
               <ul className="flex flex-col gap-2">
-                {visible.map((exercise) => (
-                  <ExerciseRow
-                    key={exercise.id}
-                    exercise={exercise}
-                    index={day.exercises.indexOf(exercise)}
-                    expanded={expandedId === exercise.id}
-                    isDragging={dragId === exercise.id}
-                    isDragOver={dragOverId === exercise.id}
-                    onToggle={() => onToggleExercise(exercise.id)}
-                    onRename={(name, autoMuscle) => {
-                      if (autoMuscle !== undefined) {
-                        onPatch(exercise.id, { name, muscle: autoMuscle })
-                      } else {
-                        onPatch(exercise.id, { name })
+                {visible.map((exercise) => {
+                  const itemIndex = day.exercises.indexOf(exercise)
+                  return (
+                    <ExerciseRow
+                      key={exercise.id}
+                      exercise={exercise}
+                      index={itemIndex}
+                      expanded={expandedId === exercise.id}
+                      isDragging={dragId === exercise.id}
+                      isDragOver={dragOverId === exercise.id}
+                      onToggle={() => onToggleExercise(exercise.id)}
+                      onRename={(name, autoMuscle) => {
+                        if (autoMuscle !== undefined) {
+                          onPatch(exercise.id, { name, muscle: autoMuscle })
+                        } else {
+                          onPatch(exercise.id, { name })
+                        }
+                      }}
+                      onMuscleChange={(muscle) =>
+                        onPatch(exercise.id, { muscle, isManualTagged: true })
                       }
-                    }}
-                    onMuscleChange={(muscle) =>
-                      onPatch(exercise.id, { muscle, isManualTagged: true })
-                    }
-                    onRemove={() => onRemove(exercise.id)}
-                    onSetChange={(setId, field, value) =>
-                      onPatch(exercise.id, {
-                        sets: exercise.sets.map((set) =>
-                          set.id === setId ? { ...set, [field]: value } : set,
-                        ),
-                      })
-                    }
-                    onSetRemove={(setId) =>
-                      onPatch(exercise.id, {
-                        sets:
-                          exercise.sets.length > 1
-                            ? exercise.sets.filter((set) => set.id !== setId)
-                            : [createEmptySet()],
-                      })
-                    }
-                    onSetAdd={() =>
-                      onPatch(exercise.id, {
-                        sets: [...exercise.sets, createEmptySet()],
-                      })
-                    }
-                    onDragStart={() => onDragStart(exercise.id)}
-                    onDragEnter={() => onDragEnter(exercise.id)}
-                    onDragEnd={onDragEnd}
-                  />
-                ))}
+                      onRemove={() => onRemove(exercise.id)}
+                      onMoveUp={() => handleMoveExercise(itemIndex, itemIndex - 1)}
+                      onMoveDown={() => handleMoveExercise(itemIndex, itemIndex + 1)}
+                      canMoveUp={itemIndex > 0}
+                      canMoveDown={itemIndex < day.exercises.length - 1}
+                      onSetChange={(setId, field, value) =>
+                        onPatch(exercise.id, {
+                          sets: exercise.sets.map((set) =>
+                            set.id === setId ? { ...set, [field]: value } : set,
+                          ),
+                        })
+                      }
+                      onSetRemove={(setId) =>
+                        onPatch(exercise.id, {
+                          sets:
+                            exercise.sets.length > 1
+                              ? exercise.sets.filter((set) => set.id !== setId)
+                              : [createEmptySet()],
+                        })
+                      }
+                      onSetAdd={() =>
+                        onPatch(exercise.id, {
+                          sets: [...exercise.sets, createEmptySet()],
+                        })
+                      }
+                      onDragStart={() => onDragStart(exercise.id)}
+                      onDragEnter={() => onDragEnter(exercise.id)}
+                      onDragEnd={onDragEnd}
+                    />
+                  )
+                })}
               </ul>
             )}
 
