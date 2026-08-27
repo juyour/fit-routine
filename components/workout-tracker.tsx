@@ -201,27 +201,29 @@ export function WorkoutTracker({ onGoHome }: WorkoutTrackerProps = {}) {
     <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-4 pb-36 pt-5">
       {/* 헤더 영역 */}
       <header className="flex items-center justify-between gap-4 pb-4">
-        <div className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
-            <Dumbbell className="size-4.5" />
-          </span>
+        <div className="flex items-center gap-3">
+          {onGoHome ? (
+            <button
+              type="button"
+              onClick={onGoHome}
+              aria-label="소개 홈으로 이동"
+              title="소개 홈으로 이동"
+              className="flex size-10 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all hover:border-blue-400 hover:shadow-[0_0_22px_rgba(37,99,235,0.6)] hover:scale-105 active:scale-95"
+            >
+              <NeonHomeIcon size={22} />
+            </button>
+          ) : (
+            <span className="flex size-10 items-center justify-center rounded-xl border border-blue-500/30 bg-[#0f172a] shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+              <NeonHomeIcon size={22} />
+            </span>
+          )}
+
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-bold leading-tight tracking-tight">
+              <h1 className="text-base font-bold leading-tight tracking-tight text-white">
                 FitRoutine
               </h1>
-              {onGoHome && (
-                <button
-                  type="button"
-                  onClick={onGoHome}
-                  aria-label="홈 소개 페이지로 이동"
-                  title="홈 소개 페이지로 이동"
-                  className="flex size-7 items-center justify-center rounded-lg border border-blue-500/30 bg-[#131b2e] shadow-[0_0_12px_rgba(37,99,235,0.25)] transition-all hover:border-blue-400 hover:shadow-[0_0_18px_rgba(37,99,235,0.45)] hover:scale-105 active:scale-95"
-                >
-                  <NeonHomeIcon size={18} />
-                </button>
-              )}
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-400">
                 <Sparkles className="size-3" />
                 Gemini AI
               </span>
